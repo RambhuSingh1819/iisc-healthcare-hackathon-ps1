@@ -19,7 +19,7 @@ This notebook is a skeleton and can be changed by participants'''
 # =========================
 # 1. INSTALLS / IMPORTS
 # =========================
-
+# this is the main file.
 # Uncomment and adapt as needed during hackathon usage.
 #!pip install pymupdf pdf2image pillow opencv-python pandas numpy pydantic python-dateutil rapidfuzz
 
