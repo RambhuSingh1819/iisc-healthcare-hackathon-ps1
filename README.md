@@ -1,174 +1,176 @@
-# 🏆 IISc Healthcare Hackathon 2026 — PS1 Solution
+# 🏥 PM-JAY Auto-Adjudication System
 
-## NHA AB PM-JAY Auto-Adjudication using Gemma 3 12B
+### IISc Healthcare Hackathon 2026 — Problem Statement 1 (PS1)
 
-A leaderboard-leading solution for the IISc Healthcare Hackathon 2026 Problem Statement 1 (PS1), focused on automated adjudication of PM-JAY healthcare claims using multimodal document understanding, clinical evidence extraction, and STG-based rule validation.
+> Leaderboard-leading solution for automated healthcare claim adjudication under the National Health Authority's Ayushman Bharat PM-JAY scheme.
 
-**Current Best Score:** **0.7662**
-**Leaderboard Position:** **#1 (at submission time)**
+[![Healthcare AI](https://img.shields.io/badge/Domain-Healthcare-blue)]()
+[![Gemma 3 12B](https://img.shields.io/badge/Model-Gemma%203%2012B-green)]()
+[![Python](https://img.shields.io/badge/Python-3.10+-yellow)]()
+[![Final Score](https://img.shields.io/badge/Final%20Score-0.7662-brightgreen)]()
 
 ---
 
-## 🎯 Problem Statement
+## 📖 Overview
 
-Automatically process claim documents and generate adjudication-ready outputs for four PM-JAY package codes:
+This repository contains our end-to-end solution for **IISc Healthcare Hackathon 2026 – PS1**, which focuses on automating the adjudication of PM-JAY healthcare insurance claims.
 
-| Package Code | Condition              |
+The system processes claim documents (PDFs and images), extracts clinical and administrative evidence, validates claims against Standard Treatment Guidelines (STGs), and generates adjudication-ready outputs conforming to NHA specifications.
+
+The solution leverages **Gemma 3 12B Vision-Language Models**, rule-based clinical validation, and package-specific heuristics to achieve high accuracy while remaining within strict token and compute constraints.
+
+---
+
+## 🎯 Supported PM-JAY Packages
+
+| Package Code | Medical Condition      |
 | ------------ | ---------------------- |
 | MG064A       | Severe Anemia          |
 | SG039C       | Cholecystectomy        |
 | MG006A       | Enteric Fever          |
 | SB039A       | Total Knee Replacement |
 
-The solution combines:
-
-* Gemma 3 12B vision-language document understanding
-* OCR and document classification
-* STG (Standard Treatment Guideline) rule extraction
-* Clinical evidence validation
-* Administrative evidence extraction
-* Package-specific adjudication logic
-* Automatic JSON generation conforming to NHA specifications
-
 ---
 
-## 📊 Performance
+# 🏆 Results
 
-### Best Submission
+## Best Submission
 
 | Metric          | Score      |
 | --------------- | ---------- |
-| mandatory_f1    | 0.9154     |
-| clinical_f1     | 0.7909     |
-| extra_f1        | 0.7684     |
-| rank_score      | 0.1066     |
-| **final_score** | **0.7662** |
+| Mandatory F1    | 0.9154     |
+| Clinical F1     | 0.7909     |
+| Extra F1        | 0.7684     |
+| Rank Score      | 0.1066     |
+| **Final Score** | **0.7662** |
 
-### Package Coverage
+### Package-wise Coverage
 
-| Package | Records |
-| ------- | ------- |
-| MG064A  | 351     |
-| SG039C  | 331     |
-| MG006A  | 456     |
-| SB039A  | 459     |
+| Package | Records Generated |
+| ------- | ----------------- |
+| MG064A  | 351               |
+| SG039C  | 331               |
+| MG006A  | 456               |
+| SB039A  | 459               |
 
 ---
 
-## 🚀 Key Innovations
+# 🚀 Key Features
 
-### 1. Two-Stage Gemma Pipeline
+### 📄 Multi-Document Healthcare Understanding
 
-Each page undergoes two independent VLM evaluations:
+* PDF and image processing
+* Medical document classification
+* OCR-based information extraction
+* Clinical evidence identification
+* Administrative evidence detection
 
-#### Stage 1 – Document Intelligence
+### 🤖 Dual-Pass Gemma Pipeline
+
+Every page undergoes two independent analyses:
+
+#### Pass 1: Document Intelligence
 
 Extracts:
 
 * OCR text
-* Document type
-* Clinical entities
+* Document category
+* Medical entities
 * Administrative entities
 * Visual indicators
 * Evidence snippets
 
-#### Stage 2 – Clinical Validation
+#### Pass 2: Clinical Assessment
 
-Per-package evaluation of:
+Validates:
 
 * Diagnosis evidence
 * Clinical findings
-* Laboratory support
-* Procedure validation
-* STG compliance indicators
+* Laboratory results
+* Procedure evidence
+* STG compliance
 
----
+### 🧠 Hybrid Clinical Validation
 
-### 2. Keyword × Gemma Intersection Strategy
-
-Multiple fusion strategies were evaluated.
-
-Best-performing approach:
+The highest-performing strategy combines:
 
 ```text
-Clinical Evidence = Keyword Match ∩ Gemma Classification
+Keyword Evidence ∩ Gemma Clinical Prediction
 ```
 
-This significantly reduces false positives while preserving recall.
+This approach reduced false positives while maintaining strong recall across all package categories.
 
-| Strategy        | Clinical F1 |
-| --------------- | ----------- |
-| Keyword Only    | 0.7838      |
-| Gemma Only      | 0.7567      |
-| Hybrid Union    | 0.7725      |
-| Keyword ∩ Gemma | **0.7909**  |
+### ⚡ Intelligent Caching
 
----
+Two cache layers minimize repeated model calls:
 
-### 3. SG039C Package Optimization
+* Document understanding cache
+* Clinical assessment cache
 
-Manual analysis of all SG039C evaluation cases enabled:
-
-* Continuity validation
-* Administrative evidence propagation
-* Surgical evidence refinement
-* Package-specific keyword expansion
-
-These improvements increased both:
-
-* extra_f1
-* rank_score
-
-without impacting clinical precision.
-
----
-
-## 🏗️ Solution Architecture
+Result:
 
 ```text
-PDF / JPG Claim Document
-        │
-        ▼
-Page Extraction
-(PyMuPDF)
-        │
-        ▼
-Gemma Analysis #1
-(Document Understanding)
-        │
-        ├── OCR
-        ├── Entity Extraction
-        ├── Doc Classification
-        └── Visual Signals
-        │
-        ▼
-Gemma Analysis #2
-(Clinical Validation)
-        │
-        ▼
-Keyword × Gemma Fusion
-        │
-        ▼
-Evidence Aggregation
-        │
-        ▼
-Case-Level Date Propagation
-        │
-        ▼
-Document Ranking
-        │
-        ▼
-Schema Validation
-        │
-        ▼
-Output JSON
+First Run  → Full Processing
+Later Runs → Near Instant Execution
 ```
 
 ---
 
-## 📂 Repository Structure
+# 🏗️ System Architecture
 
-```text
+```mermaid
+flowchart TD
+
+A[Claim PDF / Image] --> B[Page Extraction]
+
+B --> C[Gemma Analysis - Stage 1]
+
+C --> D[OCR Extraction]
+C --> E[Document Classification]
+C --> F[Entity Recognition]
+
+D --> G[Clinical Analysis]
+E --> G
+F --> G
+
+G --> H[Gemma Analysis - Stage 2]
+
+H --> I[Clinical Validation]
+H --> J[STG Rule Matching]
+
+I --> K[Evidence Aggregation]
+J --> K
+
+K --> L[Case-Level Processing]
+
+L --> M[Date Propagation]
+L --> N[Document Ranking]
+
+M --> O[Schema Validation]
+N --> O
+
+O --> P[Package JSON Output]
+```
+
+---
+
+# 📊 Experiment Tracking
+
+Several clinical evidence fusion approaches were evaluated.
+
+| Experiment                            | Clinical F1 | Extra F1   | Rank Score | Final Score |
+| ------------------------------------- | ----------- | ---------- | ---------- | ----------- |
+| Per-page Evidence + RANK_MAP          | 0.7838      | 0.7683     | 0.1070     | 0.7641      |
+| Pure Gemma Clinical Override          | 0.7567      | 0.7683     | 0.1060     | 0.7554      |
+| Keyword ∩ Gemma                       | 0.7909      | 0.7683     | 0.1060     | 0.7661      |
+| Hybrid Union Strategy                 | 0.7725      | 0.7683     | 0.1060     | 0.7604      |
+| Keyword ∩ Gemma + SG039C Enhancements | **0.7909**  | **0.7684** | **0.1066** | **0.7662**  |
+
+---
+
+# 📂 Repository Structure
+
+```bash
 .
 ├── solution_notebook.ipynb
 ├── best_submission_ps1.ipynb
@@ -179,12 +181,8 @@ Output JSON
 │   ├── MG006A.json
 │   └── SB039A.json
 │
-├── HI.txt
 ├── STG_RULES_*.md
 ├── STG Rules PDF's/
-│
-├── nha_ps1_skeletal_notebook_main.ipynb
-├── full.py
 │
 ├── nha_ps1/
 ├── scripts/
@@ -195,14 +193,15 @@ Output JSON
 ├── vlm_cache/
 ├── vlm_clinical_cache/
 │
-└── requirements.txt
+├── requirements.txt
+└── README.md
 ```
 
 ---
 
-## ⚙️ Running on the NHA Platform
+# ⚙️ Running the Solution
 
-### Step 1
+## 1. Upload Notebook
 
 Upload:
 
@@ -210,124 +209,115 @@ Upload:
 solution_notebook.ipynb
 ```
 
-to the NHA Jupyter environment.
+to the NHA Jupyter platform.
 
-### Step 2
+---
 
-Configure credentials:
+## 2. Configure Credentials
+
+Update:
 
 ```python
 clientId = "YOUR_CLIENT_ID"
 clientSecret = "YOUR_CLIENT_SECRET"
 ```
 
-### Step 3
+---
 
-Download dataset using Databank ID:
+## 3. Download Databank
+
+Databank ID:
 
 ```text
 c110a5f8-6e79-43bd-bd7a-979677354958
 ```
 
-### Step 4
+---
 
-Disable VLM limits:
+## 4. Configure Runtime
 
 ```python
 MAX_VLM_CALLS = None
 ```
 
-### Step 5
+---
+
+## 5. Execute
 
 Run all notebook cells.
 
-The pipeline automatically:
-
-* Detects claim documents
-* Processes PDFs and images
-* Uses cached VLM results
-* Generates package-wise outputs
-
-Output location:
+Generated outputs:
 
 ```text
-output/<PACKAGE>.json
+output/
+├── MG064A.json
+├── SG039C.json
+├── MG006A.json
+└── SB039A.json
 ```
 
 ---
 
-## 📈 Experimental Results
+# 📈 Ranking Strategy Evaluation
 
-### Clinical Extraction Strategies
+| Ranking Method        | Rank Score | Final Score |
+| --------------------- | ---------- | ----------- |
+| Per-Page RANK_MAP     | **0.1070** | **0.7641**  |
+| Global Sequential     | 0.0999     | 0.7632      |
+| Typical Rank Ordering | 0.0450     | 0.7557      |
+| Filename Ordering     | 0.0075     | 0.7515      |
 
-| Experiment                            | clinical_f1 | extra_f1   | rank_score | final_score |
-| ------------------------------------- | ----------- | ---------- | ---------- | ----------- |
-| Per-page evidence + RANK_MAP          | 0.7838      | 0.7683     | 0.1070     | 0.7641      |
-| Pure Gemma Override                   | 0.7567      | 0.7683     | 0.1060     | 0.7554      |
-| Keyword ∩ Gemma                       | 0.7909      | 0.7683     | 0.1060     | 0.7661      |
-| Hybrid Union                          | 0.7725      | 0.7683     | 0.1060     | 0.7604      |
-| Keyword ∩ Gemma + SG039C Enhancements | **0.7909**  | **0.7684** | **0.1066** | **0.7662**  |
-
----
-
-## 📊 Resource Utilization
-
-| Resource      | Limit | Usage |
-| ------------- | ----- | ----- |
-| Input Tokens  | 24M   | ~2.1M |
-| Output Tokens | 1.5M  | ~690K |
-| Total Budget  | 25.5M | ~2.8M |
-
-### Efficiency
-
-* Input budget used: 8.7%
-* Output budget used: 46%
-* Total budget used: 11%
+Per-page ranking based on document-specific ordering consistently performed best.
 
 ---
 
-## 🔄 Caching System
+# 💰 Resource Efficiency
 
-### Cache Layer 1
+## Token Usage
 
-```text
-vlm_cache/
-```
+| Resource      | Limit | Consumption |
+| ------------- | ----- | ----------- |
+| Input Tokens  | 24M   | 2.1M        |
+| Output Tokens | 1.5M  | 690K        |
+| Total Budget  | 25.5M | 2.8M        |
 
-Stores:
+### Utilization
 
-* OCR results
-* Document classification
-* Entity extraction
-* Visual metadata
+* Input Budget Used: **8.7%**
+* Output Budget Used: **46%**
+* Total Budget Used: **11%**
 
-### Cache Layer 2
-
-```text
-vlm_clinical_cache/
-```
-
-Stores:
-
-* Clinical package evaluations
-
-Subsequent runs typically require zero new model calls, enabling near-instant execution.
+The solution remains highly cost-efficient while maintaining competitive performance.
 
 ---
 
-## 🔮 Future Improvements
+# 🔬 Technical Highlights
+
+* Gemma 3 12B Vision-Language Integration
+* Healthcare Document Intelligence
+* Clinical Evidence Extraction
+* STG Rule-Based Validation
+* Multi-Stage Information Fusion
+* Case-Level Metadata Propagation
+* Medical Document Ranking
+* High-Performance Caching Layer
+* Schema-Constrained JSON Generation
+
+---
+
+# 🌟 Future Enhancements
 
 * Cross-document reasoning
-* Temporal clinical evidence linking
-* Laboratory result normalization
-* Explainable adjudication outputs
-* Improved package-specific validation rules
-* Additional optimization for SB039A and SG039C
+* Temporal evidence linking
+* Lab result normalization
+* Explainable adjudication decisions
+* Additional package support
+* Lightweight fine-tuning for healthcare documents
 
 ---
 
-## 🙏 Acknowledgements
+# 🙌 Acknowledgements
 
-Developed during the IISc Healthcare Hackathon 2026 for the National Health Authority (NHA) PM-JAY Auto-Adjudication Challenge.
+Developed for the **IISc Healthcare Hackathon 2026** in collaboration with the **National Health Authority (NHA)**.
 
-Special thanks to the organizers for providing the evaluation framework, STG references, and healthcare claim datasets that enabled rapid experimentation and model refinement.
+This project demonstrates the application of multimodal large language models and healthcare-specific validation pipelines for scalable, automated claim adjudication under the Ayushman Bharat PM-JAY program.
