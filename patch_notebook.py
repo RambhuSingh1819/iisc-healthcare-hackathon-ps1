@@ -23,6 +23,7 @@ with open(NB_PATH, "r", encoding="utf-8") as f:
 cells = nb["cells"]
 patched = []
 
+# ---- This is the patch_cell_sources ------
 
 def patch_cell_source(cell_idx, old_str, new_str, label=""):
     """Replace old_str with new_str in the given cell's source."""
